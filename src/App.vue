@@ -26,20 +26,51 @@ setInterval(() => {
   now.value += 0.10
 }, 100);
 
+const colors = [
+"#aa0000",
+"#00aa00",
+"#0000aa",
+"#00aaaa",
+"#aa00aa",
+"#aaaa00",
+"#aaaaaa",
+]
+
 const asyncFunctions = ref<Array<AsyncFunction>>([
-  new AsyncFunction('function 1', "#aa0000", [2, 4, 8, 10]),
-  new AsyncFunction('function 2', "#00aa00", [1, 5, 7]),
-  new AsyncFunction('function 3', "#0000aa", [3, 5])  
+  new AsyncFunction('1', colors[0]),
+  new AsyncFunction('2', colors[1])
 ]);
 
+const run = async () => {
+  if (asyncType.value === 'parallel') await runParallel();
+  else if (asyncType.value === 'vertical') await runVertical();
+}
 
-// const pushFunction = (label: string, color: string) => {
-//   asyncFunctions.value.push(new AsyncFunction(label, color, [], 2000));
-// }
+const runParallel = async () => {
+  const functions: Array<Promise<void>> = [];
+  asyncFunctions.value.forEach(f => {
+    functions.push(f.invoke(now.value));
+  });
+  return await Promise.all(functions);
+}
+
+const runVertical = async () => {
+
+  for (const f of asyncFunctions.value) {
+    await f.invoke(now.value);
+  }
+}
+
+const pushFunction = () => {
+  const sz = asyncFunctions.value.length;
+  const label = `function ${sz + 1}`;
+  const color = colors[sz % colors.length];
+  asyncFunctions.value.push(new AsyncFunction(label, color, [], 2000));
+}
 
 const reset = () => {
   now.value = 1;
-  asyncFunctions.value.forEach(v => { v.invoke(); v.reset(); });
+  asyncFunctions.value.forEach(v => { v.reset(); });
 }
 </script>
 
@@ -55,11 +86,24 @@ const reset = () => {
       </button>
       <div>{{ "<- 切り替えボタン" }}</div>
     </div>
-    <div class="flex">
+    <div class="flex space-x-4">
       <button
-        class="ml-1 border rounded-lg px-1"
-        @click="reset()">
+        class="w-32 border rounded-lg py-4 bg-blue-900"
+        @click="reset()"
+      >
         リセット
+      </button>
+      <button
+        class="w-32 border rounded-lg py-4 bg-yellow-600"
+        @click="pushFunction()"
+      >
+        追加
+      </button>
+      <button
+        class="w-32 border rounded-lg py-4 bg-red-900"
+        @click="run()"
+      >
+        開始
       </button>
     </div>
     <div class="flex flex-col space-y-3 mt-3">

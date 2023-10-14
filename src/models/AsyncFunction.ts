@@ -20,12 +20,14 @@ export class AsyncFunction {
     return this.periods.length % 2 === 0 ? 'fulfilled' : 'pending';
   }
 
-  invoke(): Promise<void> {
+  invoke(time: number): Promise<void> {
+    this.periods.push(time);
     console.info(`${this.label} start`);
 
     return new Promise(resolve =>
       setTimeout(() => {
         console.log(`${this.label} end`);
+        this.periods.push(time + this.wait_milliseconds / 1000);
         resolve();
       },
       this.wait_milliseconds

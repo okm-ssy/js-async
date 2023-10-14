@@ -20,12 +20,6 @@ const percents = computed(() => {
   return ret;
 });
 
-const addPeriod = async (asyncFunction: AsyncFunction) => {
-  asyncFunction.periods.push(props.now);
-  await asyncFunction.invoke();
-  asyncFunction.periods.push(props.now);
-}
-
 const buttonLabel = (asyncFunction: AsyncFunction) => {
   return (asyncFunction.periods.length % 2) === 0 ? '始める' : '止める';
 }
@@ -55,13 +49,14 @@ const borderColorClass = () => {
 </script>
 
 <template>
+  {{ asyncFunction.periods }}
   <div class="flex items-center space-x-2">
     <div class="w-32 break-words flex-shrink-0">
       {{ asyncFunction.label }}
     </div>
     <button
       class="flex-shrink-0 border rounded-md px-1"
-      @click="async () => { await addPeriod(props.asyncFunction) }"
+      @click="asyncFunction.invoke(now)"
     >
       {{ buttonLabel(props.asyncFunction) }}
     </button>
