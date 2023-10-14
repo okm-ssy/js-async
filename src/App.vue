@@ -5,7 +5,6 @@ import { AsyncFunction, AsyncType, sleep } from './models/AsyncFunction.ts'
 
 const asyncType = ref<AsyncType>('vertical');
 const toggleType = () => {
-  initialize();
   if (asyncType.value === 'parallel') asyncType.value = 'vertical';
   else asyncType.value = 'parallel';
 }
@@ -92,8 +91,10 @@ onMounted(() => initialize());
 </script>
 
 <template>
-  <div class="m-3 flex flex-col ">
-    <div class="w-full flex justify-center space-x-3 items-center">
+  <div class="m-3 flex flex-col">
+    <div
+      class="w-full flex justify-center space-x-3 items-center"
+    >
       <button
         class="w-16 border rounded-md text-black font-bold"
         :class="toggleButtonColorCSS()"
@@ -106,18 +107,21 @@ onMounted(() => initialize());
     <div class="flex space-x-4">
       <button
         class="w-32 border rounded-lg py-4 bg-yellow-600"
+        :class="running && ' pointer-events-none'"
         @click="initialize()"
       >
         リセット
       </button>
       <button
         class="w-32 border rounded-lg py-4 bg-blue-600"
+        :class="running && ' pointer-events-none'"
         @click="run()"
       >
         開始
       </button>
       <button
         class="w-32 border rounded-lg py-4 bg-red-900"
+        :class="running && ' pointer-events-none'"
         @click="pushFunction()"
       >
         追加

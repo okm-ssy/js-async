@@ -36,7 +36,7 @@ const borderColorClass = () => {
   if (props.asyncFunction.state() === 'fulfilled') {
     return  'border-green-300';
   }
-  
+
   if (props.asyncFunction.state() === 'pending') {
     return  'border-yellow-300';
   }
@@ -47,14 +47,36 @@ const borderColorClass = () => {
 
   return 'border-white'
 }
+
+const textColorClass = () => {
+  if (props.asyncFunction.state() === 'fulfilled') {
+    return  'text-green-300';
+  }
+
+  if (props.asyncFunction.state() === 'pending') {
+    return  'text-yellow-300';
+  }
+
+  if (props.asyncFunction.state() === 'reject') {
+    return  'text-red-300';
+  }
+
+  return 'text-white'
+}
 </script>
 
 <template>
   <div class="flex items-center space-x-2">
-    <div class="w-32 break-words flex-shrink-0">
+    <div
+      class="w-32 break-words flex-shrink-0"
+      :class="textColorClass()"
+    >
       {{ asyncFunction.label }}
     </div>
-    <div class="w-16">
+    <div
+      class="w-16"
+      :class="textColorClass()"
+    >
       {{ timeLabel() }}
     </div>
     <div class="flex border-4 bg-slate-900 h-10 w-full"
