@@ -20,15 +20,16 @@ const percents = computed(() => {
   return ret;
 });
 
-const buttonLabel = (asyncFunction: AsyncFunction) => {
-  return (asyncFunction.periods.length % 2) === 0 ? '始める' : '止める';
-}
-
 const getColor = (num: number) => {
   if (num % 2 === 0) {
     return '#000000';
   }
   return props.asyncFunction.color;
+}
+
+const timeLabel = () => {
+  const time = Math.floor(props.asyncFunction.wait_milliseconds) / 1000;
+  return `(${time}s)`
 }
 
 const borderColorClass = () => {
@@ -49,18 +50,15 @@ const borderColorClass = () => {
 </script>
 
 <template>
-  {{ asyncFunction.periods }}
   <div class="flex items-center space-x-2">
     <div class="w-32 break-words flex-shrink-0">
       {{ asyncFunction.label }}
     </div>
-    <button
-      class="flex-shrink-0 border rounded-md px-1"
-      @click="asyncFunction.invoke(now)"
-    >
-      {{ buttonLabel(props.asyncFunction) }}
-    </button>
-    <div class="flex border-4 bg-slate-900 h-10 w-full" :class="borderColorClass()">
+    <div class="w-16">
+      {{ timeLabel() }}
+    </div>
+    <div class="flex border-4 bg-slate-900 h-10 w-full"
+      :class="borderColorClass()">
       <div 
         v-for="(percent, index) in percents"
         :key="index"

@@ -9,8 +9,9 @@ export function sleep(milliseconds: number) {
 export class AsyncFunction {
   label;
   color;
-  periods;
   wait_milliseconds;
+
+  periods: Array<number> = [];
 
   reset() {
     this.periods = [];
@@ -18,6 +19,18 @@ export class AsyncFunction {
 
   state(): AsyncState {
     return this.periods.length % 2 === 0 ? 'fulfilled' : 'pending';
+  }
+
+  fulfilled(): boolean {
+    return this.state() === 'fulfilled';
+  }
+
+  pending(): boolean {
+    return this.state() === 'pending';
+  }
+
+  reject(): boolean {
+    return this.state() === 'reject';
   }
 
   invoke(time: number): Promise<void> {
@@ -37,12 +50,10 @@ export class AsyncFunction {
   constructor(
     _label: string = '', 
     _color: string = '#aaaaaa',
-    _periods: number[] = [], 
     _wait_milliseconds: number = 500
   ) {
     this.label = _label;
     this.color = _color;
-    this.periods = _periods;
-    this.wait_milliseconds = _wait_milliseconds;
+    this.wait_milliseconds = Math.floor(_wait_milliseconds / 100) * 100;
   }
 }
